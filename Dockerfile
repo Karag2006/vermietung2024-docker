@@ -35,7 +35,7 @@ RUN composer install && npm install && npm run build
 
 ## Finish
 # Generate key and link storage
-RUN php artisan key:generate && php artisan storage:link
+RUN php artisan storage:link
 
 # Expose port
 EXPOSE 80
