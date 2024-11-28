@@ -5,9 +5,10 @@ services:
       - "80:80"
     container_name: web
     environment:
+      APP_KEY:
       DB_CONNECTION: mysql
-      DB_HOST: mysql
+      DB_HOST: localhost
       DB_PORT: 3306
-      DB_DATABASE: laravel
-      DB_USERNAME: sail
-      DB_PASSWORD: password
+      DB_DATABASE: vermietung
+      DB_USERNAME: root
+      DB_PASSWORD:
