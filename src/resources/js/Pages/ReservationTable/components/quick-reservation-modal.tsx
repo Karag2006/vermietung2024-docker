@@ -30,7 +30,7 @@ import { DecisionButtons } from "@/Components/decision-buttons";
 import { toast } from "sonner";
 import { getDocumentTypeTranslation, isObjectEmpty } from "@/lib/utils";
 import { router } from "@inertiajs/react";
-import { parse } from "date-fns";
+import { parse, set } from "date-fns";
 
 interface QuickReservationModalProps {
     currentID: number;
@@ -39,6 +39,10 @@ interface QuickReservationModalProps {
     currentDocumentNumber?: number;
     close: () => void;
 }
+
+export type QuickReservationErrors = {
+    [key: string]: string;
+};
 
 export const QuickReservationModal = ({
     currentID,
@@ -58,6 +62,7 @@ export const QuickReservationModal = ({
     const [collectAdresses, setCollectAdresses] = useState<
         CollectAddressItem[]
     >([]);
+    const [errors, setErrors] = useState<QuickReservationErrors>({});
 
     const [localPrice, setLocalPrice] = useState(
         floatToString(data.data.total_price)
@@ -257,11 +262,21 @@ export const QuickReservationModal = ({
     const storeNewDocument = () => {
         storeDocument(data)
             .then((data) => {
-                toast.success(`Reservierung erfolgreich angelegt`);
+                if (data && data.errors) {
+                    setErrors(data.errors);
+                    const article = "der";
+                    toast.error(`Fehler beim anlegen ${article} Reservierung`);
+                } else if (!data.errors) {
+                    toast.success(`Reservierung erfolgreich angelegt`);
+                    close();
+                    router.visit(
+                        route("reservationTable", { month: currentMonth })
+                    );
+                }
             })
             .catch((error) => {
-                console.log("error: ", error);
-
+                // console.log("error: ", error.response.data.errors);
+                setErrors(error.response.data.errors);
                 const article = "der";
                 toast.error(`Fehler beim anlegen ${article} Reservierung`);
 
@@ -283,13 +298,13 @@ export const QuickReservationModal = ({
                 //             trailerEntries.push([fieldName, message]);
                 //         if (bagName === "data")
                 //             dataEntries.push([fieldName, message]);
-            })
-            .finally(() => {
-                close();
-                router.visit(
-                    route("reservationTable", { month: currentMonth })
-                );
             });
+        // .finally(() => {
+        //     close();
+        //     router.visit(
+        //         route("reservationTable", { month: currentMonth })
+        //     );
+        // });
 
         //     console.log(
         //         isObjectEmpty(Object.fromEntries(driverEntries))
@@ -306,17 +321,32 @@ export const QuickReservationModal = ({
     const documentUpdate = () => {
         updateDocument(currentID, data)
             .then((data) => {
-                // router.reload({ preserveState: false });
-                toast.success(`${germanDocumentType} erfolgreich aktualisiert`);
+                if (data && data.errors) {
+                    setErrors(data.errors);
+                    const article = "der";
+                    toast.error(`Fehler beim anlegen ${article} Reservierung`);
+                } else if (!data.errors) {
+                    toast.success(
+                        `${germanDocumentType} erfolgreich aktualisiert`
+                    );
+                    close();
+                    router.visit(
+                        route("reservationTable", { month: currentMonth })
+                    );
+                }
             })
-            .catch((error) => {})
-            .finally(() => {
-                close();
-                router.visit(
-                    route("reservationTable", { month: currentMonth }),
-                    { preserveScroll: true }
-                );
+            .catch((error) => {
+                setErrors(error.response.data.errors);
+                const article = "der";
+                toast.error(`Fehler beim anlegen ${article} Reservierung`);
             });
+    };
+
+    const removeError = (key: string) => {
+        setErrors((errors) => {
+            delete errors[key];
+            return { ...errors };
+        });
     };
 
     useEffect(() => {
@@ -381,6 +411,12 @@ export const QuickReservationModal = ({
         getCurrentTrailer();
     }, [data.trailer.id]);
 
+    useEffect(() => {
+        if (errors) {
+            console.log("errors: ", errors);
+        }
+    }, [errors]);
+
     return (
         <div className="p-4 w-full flex flex-col gap-8">
             <div className="flex gap-8 justify-between mb-4">
@@ -411,6 +447,8 @@ export const QuickReservationModal = ({
                         id="id"
                         value={data.trailer.id}
                         items={trailerList}
+                        error={errors["trailer.title"]}
+                        removeError={() => removeError("trailer.title")}
                         onValueChange={handleTrailerPickerChange}
                         label={"Anhänger auswählen *"}
                     />
@@ -431,28 +469,36 @@ export const QuickReservationModal = ({
                     value={data.data.collect_date}
                     id="collect_date"
                     label="Abholung - Datum *"
-                    fieldName="collect_date"
+                    fieldName="data.collect_date"
+                    error={errors["data.collect_date"]}
+                    removeError={() => removeError("data.collect_date")}
                     onUpdateValue={handleDataPickerChange}
                 />
                 <TimePicker
                     value={data.data.collect_time}
                     id="collect_time"
                     label="Abholung - Uhrzeit *"
-                    fieldName="collect_time"
+                    fieldName="data.collect_time"
+                    error={errors["data.collect_time"]}
+                    removeError={() => removeError("data.collect_time")}
                     onUpdateValue={handleDataPickerChange}
                 />
                 <DatePicker
                     value={data.data.return_date}
                     id="return_date"
                     label="Rückgabe - Datum *"
-                    fieldName="return_date"
+                    fieldName="data.return_date"
+                    error={errors["data.return_date"]}
+                    removeError={() => removeError("data.return_date")}
                     onUpdateValue={handleDataPickerChange}
                 />
                 <TimePicker
                     value={data.data.return_time}
                     id="return_time"
                     label="Rückgabe - Uhrzeit *"
-                    fieldName="return_time"
+                    fieldName="data.return_time"
+                    error={errors["data.return_time"]}
+                    removeError={() => removeError("data.return_time")}
                     onUpdateValue={handleDataPickerChange}
                 />
             </div>
@@ -462,6 +508,8 @@ export const QuickReservationModal = ({
                     label="Name des Kunden *"
                     id="name1"
                     value={data.customer.name1}
+                    error={errors["customer.name1"]}
+                    onFocus={() => removeError("customer.name1")}
                     onChange={handleCustomerChange}
                 />
                 <span>oder: </span>
@@ -482,6 +530,9 @@ export const QuickReservationModal = ({
                     id="total_price"
                     value={localPrice}
                     label="Preis (Brutto) *"
+                    error={errors["data.total_price"]}
+                    fieldname="data.total_price"
+                    removeError={removeError}
                     onValueChange={handleCurrencyInput}
                     onFinishedValueChange={handleCurrencyValueChanged}
                 />
