@@ -97,10 +97,12 @@ export const AddressCombobox = ({
     }, [items]);
 
     useEffect(() => {
-        const index = filteredList.findIndex((item) => item.id === value);
-        if (index === -1) setFilterValue("");
+        if (value && value > 0) {
+            const index = items.findIndex((item) => item.id === value);
 
-        setFilterValue(filteredList[index]?.name);
+            if (index <= -1) setFilterValue("");
+            else setFilterValue(items[index]?.name);
+        }
     }, [value]);
 
     return (
