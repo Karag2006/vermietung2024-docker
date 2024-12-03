@@ -31,6 +31,7 @@ import { toast } from "sonner";
 import { getDocumentTypeTranslation, isObjectEmpty } from "@/lib/utils";
 import { router } from "@inertiajs/react";
 import { parse, set } from "date-fns";
+import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 
 interface QuickReservationModalProps {
     currentID: number;
@@ -43,6 +44,11 @@ interface QuickReservationModalProps {
 export type QuickReservationErrors = {
     [key: string]: string;
 };
+
+export type QuickReservationFormEvent =
+    | React.FormEvent<HTMLInputElement>
+    | React.FormEvent<HTMLTextAreaElement>
+    | React.FormEvent<HTMLSelectElement>;
 
 export const QuickReservationModal = ({
     currentID,
@@ -80,6 +86,38 @@ export const QuickReservationModal = ({
             ...data,
             customer: {
                 ...data.customer,
+                [key]: value,
+            },
+        }));
+    };
+
+    const handleDataChange = (
+        e:
+            | React.FormEvent<HTMLInputElement>
+            | React.FormEvent<HTMLTextAreaElement>
+            | React.FormEvent<HTMLSelectElement>
+    ) => {
+        const key = e.currentTarget.id;
+        const value = e.currentTarget.value;
+        setData((data) => ({
+            ...data,
+            data: {
+                ...data.data,
+                [key]: value,
+            },
+        }));
+    };
+
+    const handleTextValueChange = (
+        e: QuickReservationFormEvent,
+        subFormKey: "data" | "customer"
+    ) => {
+        const key = e.currentTarget.id;
+        const value = e.currentTarget.value;
+        setData((data) => ({
+            ...data,
+            [subFormKey]: {
+                ...data[subFormKey],
                 [key]: value,
             },
         }));
@@ -418,7 +456,7 @@ export const QuickReservationModal = ({
     }, [errors]);
 
     return (
-        <div className="p-4 w-full flex flex-col gap-8">
+        <div className="p-4 w-full flex flex-col gap-12">
             <div className="flex gap-8 justify-between mb-4">
                 {currentID > 0 ? (
                     <h2 className="text-xl font-bold">
@@ -441,7 +479,7 @@ export const QuickReservationModal = ({
                     noAction={close}
                 />
             </div>
-            <div className="flex gap-8">
+            <div className="flex gap-8 justify-between">
                 <div className="md:w-[calc(50%-1.25rem)]">
                     <SelectorCombobox
                         id="id"
@@ -453,17 +491,18 @@ export const QuickReservationModal = ({
                         label={"Anhänger auswählen *"}
                     />
                 </div>
+                <div className="flex gap-8">
+                    <AddressCombobox
+                        className="w-[20rem]"
+                        items={collectAdresses}
+                        label="Abhol Anschrift *"
+                        id="collect_address_id"
+                        value={data.data.collect_address_id}
+                        onValueChange={handleDataPickerChange}
+                    />
+                </div>
             </div>
-            <div className="flex gap-8">
-                <AddressCombobox
-                    className="w-[20rem]"
-                    items={collectAdresses}
-                    label="Abhol Anschrift *"
-                    id="collect_address_id"
-                    value={data.data.collect_address_id}
-                    onValueChange={handleDataPickerChange}
-                />
-            </div>
+
             <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
                 <DatePicker
                     value={data.data.collect_date}
@@ -510,7 +549,7 @@ export const QuickReservationModal = ({
                     value={data.customer.name1}
                     error={errors["customer.name1"]}
                     onFocus={() => removeError("customer.name1")}
-                    onChange={handleCustomerChange}
+                    onChange={(e) => handleTextValueChange(e, "customer")}
                 />
                 <span>oder: </span>
                 <div className="md:w-[calc(50%-1.25rem)]">
@@ -524,17 +563,47 @@ export const QuickReservationModal = ({
                 </div>
             </div>
 
-            <div className="flex gap-8 justify-between">
-                <CurrencyInput
-                    className="w-[20rem]"
-                    id="total_price"
-                    value={localPrice}
-                    label="Preis (Brutto) *"
-                    error={errors["data.total_price"]}
-                    fieldname="data.total_price"
-                    removeError={removeError}
-                    onValueChange={handleCurrencyInput}
-                    onFinishedValueChange={handleCurrencyValueChanged}
+            <div className="flex gap-80 ">
+                <div className="flex flex-col gap-y-12 w-[20rem]">
+                    <CurrencyInput
+                        className="w-full"
+                        id="total_price"
+                        value={localPrice}
+                        label="Preis (Brutto) *"
+                        error={errors["data.total_price"]}
+                        fieldname="data.total_price"
+                        removeError={removeError}
+                        onValueChange={handleCurrencyInput}
+                        onFinishedValueChange={handleCurrencyValueChanged}
+                    />
+                    <InputTP24
+                        className="w-full"
+                        label="Telefonnummer (optional)"
+                        id="phone"
+                        value={data.customer.phone}
+                        error={errors["customer.phone"]}
+                        onFocus={() => removeError("customer.phone")}
+                        onChange={(e) => handleTextValueChange(e, "customer")}
+                    />
+                </div>
+                <TextareaTP24
+                    className="w-full"
+                    label="Kommentar (optional)"
+                    id="comment"
+                    value={data.data.comment}
+                    error={errors["data.comment"]}
+                    onChange={(e) => handleTextValueChange(e, "data")}
+                    onFocus={() => removeError("data.comment")}
+                />
+            </div>
+
+            <div className="flex justify-end">
+                <DecisionButtons
+                    className="ml-4"
+                    yesLabel="Speichern"
+                    noLabel="Abbrechen"
+                    yesAction={handleSubmit}
+                    noAction={close}
                 />
             </div>
         </div>
