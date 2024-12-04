@@ -36,6 +36,10 @@ export const documentSchema = z.object({
     returnTimestamp: z.date().optional().nullable(),
     colorClass: z.string().optional().nullable(),
     total_price: z.number().optional().nullable(),
+    // 04.12.2024 : phone and comment are now added to the document schema
+    phone: z.string().optional().nullable(),
+    comment: z.string().optional().nullable(),
+
     collect_address: z.object({ id: z.number(), name: z.string() }),
 });
 
