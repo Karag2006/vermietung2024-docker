@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MonthListDocumentResource;
 use App\Models\Document;
 use App\Models\Trailer;
 use Carbon\Carbon;
@@ -30,7 +31,8 @@ class ReservationTableController extends Controller
         // 03.11.2024 Feature: Add Archive functionality
         // Removed the archived documents from the list
         $reservations = Document::with('collectAddress:id,name')
-        ->select('id', 'is_archived', 'reservation_number', 'offer_number', 'contract_number', 'current_state', 'total_price', 'customer_name1', 'vehicle_id', 'vehicle_title', 'vehicle_plateNumber', 'collect_at', 'return_at', 'collect_address_id')
+        // 04.12.2024 - switched to Custom Resource instead of using Select in the Query
+        // ->select('id', 'is_archived', 'reservation_number', 'offer_number', 'contract_number', 'current_state', 'total_price', 'customer_name1', 'vehicle_id', 'vehicle_title', 'vehicle_plateNumber', 'collect_at', 'return_at', 'collect_address_id')
         ->where('is_archived', false)
         ->whereDate('collect_at', '<=', $targetMonthEnd)
         ->whereDate('return_at', '>=', $targetMonthBegin)
@@ -42,7 +44,7 @@ class ReservationTableController extends Controller
         ->get();
 
         return Inertia::render('ReservationTable/index', [
-            'reservationList' => $reservations,
+            'reservationList' => MonthListDocumentResource::collection($reservations) ,
             'trailers' => $trailers,
             'month' => $month
         ]);
