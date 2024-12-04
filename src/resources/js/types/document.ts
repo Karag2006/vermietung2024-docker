@@ -51,7 +51,8 @@ export type DocumentProps = {
 } & PageProps;
 
 export type ReservationTableProps = {
-    reservationList: Document[];
+    // 04.12.2024 : reservationList: is now created by a Laravel Resource Collection => is now wrapped in a data object
+    reservationList: { data: Document[] };
     trailers: TrailerItem[];
     month: string;
 } & PageProps;
