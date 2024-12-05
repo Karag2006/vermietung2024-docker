@@ -199,13 +199,12 @@ return [
      */
     'notifications' => [
         'notifications' => [
-            \Spatie\Backup\Notifications\Notifications\BackupHasFailedNotification::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\UnhealthyBackupWasFoundNotification::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\CleanupHasFailedNotification::class => ['mail'],
-            // \Spatie\Backup\Notifications\Notifications\BackupWasSuccessfulNotification::class => ['mail'],
-            \App\Notifications\BackupWasSuccessfulNotification::class => ['mail', NtfyChannel::class],
-            \Spatie\Backup\Notifications\Notifications\HealthyBackupWasFoundNotification::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\CleanupWasSuccessfulNotification::class => ['mail'],
+            \App\Notifications\BackupHasFailedNotification::class => [NtfyChannel::class, 'mail'],
+            \App\Notifications\UnhealthyBackupWasFoundNotification::class => [NtfyChannel::class, 'mail'],
+            \App\Notifications\CleanupHasFailedNotification::class => [NtfyChannel::class, 'mail'],
+            \App\Notifications\BackupWasSuccessfulNotification::class => [NtfyChannel::class, 'mail'],
+            \App\Notifications\HealthyBackupWasFoundNotification::class => [NtfyChannel::class, 'mail'],
+            \App\Notifications\CleanupWasSuccessfulNotification::class => [NtfyChannel::class, 'mail'],
         ],
 
         /*
@@ -259,7 +258,7 @@ return [
     'monitor_backups' => [
         [
             'name' => env('APP_NAME', 'laravel-backup'),
-            'disks' => ['local'],
+            'disks' => ['backup'],
             'health_checks' => [
                 \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
                 \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 1000,
