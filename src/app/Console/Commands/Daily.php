@@ -41,5 +41,10 @@ class Daily extends Command
         $this->call('backup:run', [
             '--only-db' => true,
         ]);
+
+        $this->info('Cleaning up old backups ...');
+        $this->call('backup:clean');
+
+        $this->info('Daily Tasks completed.');
     }
 }
