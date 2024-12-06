@@ -44,7 +44,8 @@ class StoreDocumentRequest extends FormRequest
 
         $customerRules = [
             'customer.pass_number' => 'string|min:8|max:30|nullable',
-            'customer.name1' => 'required|string|min:5|max:100',
+            // 02.12.2024: Hotfix:  Customer Name 1 can be only a surname, 5 characters minimum was too restrictive.
+            'customer.name1' => 'required|string|min:1|max:100',
             'customer.name2' => 'string|max:100|nullable',
             'customer.birth_date' => 'nullable|regex:/^(?:[0-9]{2})\.(?:[0-9]{2})\.(?:[0-9]{4})$/',
             'customer.birth_city' => 'string|min:3|max:50|nullable',
@@ -64,7 +65,8 @@ class StoreDocumentRequest extends FormRequest
 
         $driverRules = [
             'driver.pass_number' => 'string|min:8|max:30|nullable',
-            'driver.name1' => 'string|min:5|max:100|nullable',
+            // 02.12.2024: Hotfix:  Customer Name 1 can be only a surname, 5 characters minimum was too restrictive.
+            'driver.name1' => 'string|min:1|max:100|nullable',
             'driver.name2' => 'string|max:100|nullable',
             'driver.birth_date' => 'nullable|regex:/^(?:[0-9]{2})\.(?:[0-9]{2})\.(?:[0-9]{4})$/',
             'driver.birth_city' => 'string|min:3|max:50|nullable',

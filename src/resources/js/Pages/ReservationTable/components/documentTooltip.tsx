@@ -60,6 +60,18 @@ export const DocumentTooltip = ({
                 label="Rückgabe"
                 value={`${returnDate} - ${returnTime}`}
             />
+            {document.phone && (
+                <DocumentTooltipInfoItem
+                    label="Telefon"
+                    value={document.phone}
+                />
+            )}
+            {document.comment && (
+                <DocumentTooltipInfoItem
+                    label="Kommentar"
+                    value={document.comment}
+                />
+            )}
 
             <DocumentTooltipActions
                 documentId={document.id}

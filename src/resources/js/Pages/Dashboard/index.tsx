@@ -25,11 +25,15 @@ export default function Dashboard({
         <AuthenticatedLayout user={auth.user} header={pageTitle}>
             <Head title={pageTitle} />
             <div className="flex flex-col gap-6">
-                <SimpleTrailerTable trailers={nextDueTrailers} />
+                {/*
+                    03.12.2024 update: Die Anhänger Tabelle kann so lang werden, dass die Reservierungen nicht mehr zu sehen sind.
+                                        => Reihenfolge der beiden Komponenten getauscht.
+                */}
                 <SimpleReservationTable
                     reservations={nextReservations}
                     queryParams={queryParams}
                 />
+                <SimpleTrailerTable trailers={nextDueTrailers} />
             </div>
         </AuthenticatedLayout>
     );

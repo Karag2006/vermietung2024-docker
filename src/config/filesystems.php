@@ -35,6 +35,12 @@ return [
             'root' => storage_path('app'),
             'throw' => false,
         ],
+        // 04.12.2024 - Add a new disk for backups
+        'backup' => [
+            'driver' => 'local',
+            'root' => storage_path('backups'),
+            'throw' => false,
+        ],
 
         'public' => [
             'driver' => 'local',

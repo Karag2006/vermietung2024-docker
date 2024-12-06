@@ -1,6 +1,13 @@
 {
     "private": true,
     "type": "module",
+    "name": "escobar-vermietung",
+    "version": "2024.1.0",
+    "description": "Escobar Vermietung - Laravel 11 + inertiajs + React 18",
+    "author": {
+        "name": "Martin Richter",
+        "email": "martin@martin-richter.dev"
+    },
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
