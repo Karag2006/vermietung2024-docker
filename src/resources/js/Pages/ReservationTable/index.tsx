@@ -219,7 +219,8 @@ const ReservationTable = ({
             <Head title={pageTitle} />
             <Table
                 date={monthDate}
-                reservationList={reservationList}
+                // 04.12.2024 : reservationList: is now created by a Laravel Resource Collection => is now wrapped in a data object
+                reservationList={reservationList.data}
                 trailers={trailers}
                 documentFunctions={{
                     edit: editDocumentModal,
