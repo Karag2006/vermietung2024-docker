@@ -42,8 +42,10 @@ class StoreCustomerRequest extends FormRequest
 
         return [
             'pass_number' => 'string|min:8|max:30|nullable',
-            'name1' => 'required|string|min:5|max:50',
-            'name2' => 'string|max:50|nullable',
+            // 02.12.2024: Hotfix:  Customer Name 1 can be only a surname, 5 characters minimum was too restrictive.
+            // Also in Documents Names can be 100 characters long, fixed here as well.
+            'name1' => 'required|string|min:1|max:100',
+            'name2' => 'string|max:100|nullable',
             'birth_date' => 'nullable|regex:/^(?:[0-9]{2})\.(?:[0-9]{2})\.(?:[0-9]{4})$/',
             'birth_city' => 'string|min:3|max:50|nullable',
             'plz' => 'nullable|min:4|max:10',

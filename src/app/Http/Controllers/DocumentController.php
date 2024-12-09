@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
 use App\Http\Resources\DocumentResource;
+use App\Models\Trailer;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
@@ -365,5 +366,38 @@ class DocumentController extends Controller
             $document->update(['is_archived' => true]);
         }
 
+    }
+
+    public static function fixCollisions() {
+        // 04.12.2024 moved to DocumentController from UpdateController
+        // 15.11.2024 Feature: Add Update functionality
+
+        // Hole eine Liste der aktuellen Anhänger ID's.
+        $trailers = Trailer::all()
+            ->pluck('id')
+            ->toArray();
+
+        foreach ($trailers as $trailer_id) {
+            // Hole alle Mietverträge für den Anhänger in Abholreihenfolge
+            $documents = Document::where('current_state', 'contract')
+                ->where('is_archived', false)
+                ->where('vehicle_id', $trailer_id)
+                ->orderBy('collect_at', 'ASC')
+                ->get();
+
+            DocumentController::fixCollisionsForTrailers($documents);
+        }
+    }
+
+    private static function fixCollisionsForTrailers($documents) {
+        $previousDocument = null;
+        foreach ($documents as $document) {
+            if ($previousDocument) {
+                if ($previousDocument->return_at > $document->collect_at) {
+                    $previousDocument->update(['return_at' => $document->collect_at->subMinute()]);
+                }
+            }
+            $previousDocument = $document;
+        }
     }
 }

@@ -31,7 +31,7 @@ class UpdateController extends Controller
 
         // Bei diesen Dokumenten wird return_at auf das collect_at des nachfolgenden Mietvertrags -1 Minute gesetzt.
         // Das sollte die Kollisionen verhindern und die Monatsliste korrekt darstellen.
-        UpdateController::fixCollisions();
+        DocumentController::fixCollisions();
     }
 
     private static function setTimeStamps () {
@@ -75,37 +75,7 @@ class UpdateController extends Controller
         }
     }
 
-    private static function fixCollisions() {
-        // 15.11.2024 Feature: Add Update functionality
 
-        // Hole eine Liste der aktuellen Anhänger ID's.
-        $trailers = Trailer::all()
-            ->pluck('id')
-            ->toArray();
-
-        foreach ($trailers as $trailer) {
-            // Hole alle Mietverträge für den Anhänger in Abholreihenfolge
-            $documents = Document::where('current_state', 'contract')
-                ->where('is_archived', false)
-                ->where('vehicle_id', $trailer)
-                ->orderBy('collect_at', 'ASC')
-                ->get();
-
-            UpdateController::fixCollisionsForTrailers($documents);
-        }
-    }
-
-    private static function fixCollisionsForTrailers($documents) {
-        $previousDocument = null;
-        foreach ($documents as $document) {
-            if ($previousDocument) {
-                if ($previousDocument->return_at > $document->collect_at) {
-                    $previousDocument->update(['return_at' => $document->collect_at->subMinute()]);
-                }
-            }
-            $previousDocument = $document;
-        }
-    }
 
     public static function updateTrailers()
     {

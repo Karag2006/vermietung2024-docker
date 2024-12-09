@@ -4,7 +4,8 @@ FROM php:8.3-apache
 # Install dependencies
 RUN apt-get update && apt-get dist-upgrade -y
 
-RUN apt-get install -y nodejs npm lsb-release curl apt-transport-https ca-certificates libfreetype-dev libjpeg62-turbo-dev libpng-dev libzip-dev libxml2-dev ldap-utils libldap2-dev
+RUN apt-get install -y nodejs npm lsb-release curl apt-transport-https ca-certificates libfreetype-dev libjpeg62-turbo-dev libpng-dev \ 
+libzip-dev libxml2-dev ldap-utils libldap2-dev mariadb-client
 
 # Install PHP extensions
 
