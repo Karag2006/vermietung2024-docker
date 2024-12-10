@@ -213,6 +213,19 @@ return [
         'loading_size.0' => 'Länge',
         'loading_size.1' => 'Breite',
         'loading_size.2' => 'Höhe',
+
+
+         // Documents
+
+         'customer.pass_number' => 'Kunde - Ausweisnummer',
+            'customer.phone' => 'Kunde - Telefon',
+            'customer.driving_license_no' => 'Kunde - Führerschein Nr.',
+            'driver.pass_number' => 'Fahrer - Ausweisnummer',
+            'driver.phone' => 'Fahrer - Telefon',
+            'driver.driving_license_no' => 'Fahrer - Führerschein Nr.',
+            'data.reservation_deposit_recieved' => 'Anzahlung eingegangen',
+            'data.reservation_deposit_value' => 'Anzahlung',
+            'data.collect_address_id' => 'Abholadresse',
     ],
 
 ];

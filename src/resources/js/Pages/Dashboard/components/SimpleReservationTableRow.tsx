@@ -134,9 +134,9 @@ export const SimpleReservationTableRow = ({
                         : null}
                 </TableCell>
                 <TableCell>
-                    {reservation.collect_address.name
+                    {reservation.collect_address?.name
                         ? reservation.collect_address.name
-                        : null}
+                        : "Keine Adresse"}
                 </TableCell>
                 <TableCell>
                     <ListActions
