@@ -498,6 +498,10 @@ export const QuickReservationModal = ({
                         label="Abhol Anschrift *"
                         id="collect_address_id"
                         value={data.data.collect_address_id}
+                        error={errors["data.collect_address_id"]}
+                        removeError={() =>
+                            removeError("data.collect_address_id")
+                        }
                         onValueChange={handleDataPickerChange}
                     />
                 </div>
@@ -564,7 +568,7 @@ export const QuickReservationModal = ({
             </div>
 
             <div className="flex gap-80 ">
-                <div className="flex flex-col gap-y-12 w-[20rem]">
+                <div className="flex flex-col gap-y-12 w-[30rem]">
                     <CurrencyInput
                         className="w-full"
                         id="total_price"

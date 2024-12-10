@@ -52,4 +52,11 @@ class CollectAddressController extends Controller
     {
         $collectAddress->delete();
     }
+
+
+    public static function get_collect_address_ids()
+    {
+        $collectAddressIdList = CollectAddress::pluck('id')->toArray();
+        return $collectAddressIdList;
+    }
 }

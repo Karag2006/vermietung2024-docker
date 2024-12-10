@@ -18,7 +18,7 @@ class MonthListDocumentResource extends JsonResource
     {
         $document = [
             'id' => $this->id,
-            'collect_address' => new CollectAddressResource(CollectAddress::findOrFail($this->collect_address_id)),
+            'collect_address' => new CollectAddressResource(CollectAddress::find($this->collect_address_id)),
             'collect_address_id' => $this->collect_address_id,
             'collect_at' => $this->collect_at,
             'contract_number' => $this->contract_number ?? '',

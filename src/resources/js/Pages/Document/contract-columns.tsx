@@ -56,7 +56,10 @@ export const contractColumns: ColumnDef<Document>[] = [
             );
         },
         cell: (cell) => {
-            return <span>{cell.row.original.collect_address.name}</span>;
+            if (!cell.row.original.collect_address) {
+                return <span>Keine Adresse</span>;
+            }
+            return <span>{cell.row.original.collect_address?.name}</span>;
         },
     },
     {
