@@ -45,7 +45,9 @@ export const CalendarDayTimeSlot = ({
                 <div
                     className={cn("w-full h-full relative", documentColorClass)}
                 >
-                    {first && document.collect_address.id !== 1 ? (
+                    {first &&
+                    document.collect_address &&
+                    document.collect_address.id !== 1 ? (
                         <WarningMarker />
                     ) : null}
                 </div>
