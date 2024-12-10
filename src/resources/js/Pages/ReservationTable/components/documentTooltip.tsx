@@ -40,10 +40,17 @@ export const DocumentTooltip = ({
                 label="Status"
                 value={getDocumentTypeTranslation(document.current_state)}
             />
-            <DocumentTooltipInfoItem
-                label="Abholstation"
-                value={document.collect_address.name}
-            />
+            {document.collect_address && document.collect_address.name ? (
+                <DocumentTooltipInfoItem
+                    label="Abholstation"
+                    value={document.collect_address.name}
+                />
+            ) : (
+                <DocumentTooltipInfoItem
+                    label="Abholstation"
+                    value={"Keine Adresse"}
+                />
+            )}
             <DocumentTooltipInfoItem
                 label="Kunde"
                 value={document.customer_name1}
