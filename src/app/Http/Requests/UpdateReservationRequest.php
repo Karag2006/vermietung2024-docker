@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Controllers\CollectAddressController;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Setting;
@@ -43,6 +44,7 @@ class UpdateReservationRequest extends FormRequest
     public function rules()
     {
         $settings = $this->get_settings();
+        $collectAddressIds = CollectAddressController::get_collect_address_ids();
 
         $customerRules = [
             'customer.pass_number' => 'string|min:8|max:30|nullable',
@@ -104,7 +106,7 @@ class UpdateReservationRequest extends FormRequest
             'data.return_time' => 'required|regex:/^(?:[0-9]{2})\:(?:[0-9]{2})$/',
             'data.collect_at' => 'date',
             'data.return_at' => 'date',
-            'data.collect_address_id' => 'required|integer|max:100',
+            'data.collect_address_id' => ['required', 'integer', Rule::in($collectAddressIds)],
             'data.total_price' => 'required|numeric|min:1|max:9999',
             'data.netto_price' => 'required|numeric|lte:data.total_price',
             'data.tax_value' => 'required|numeric|lte:data.total_price',
@@ -138,15 +140,6 @@ class UpdateReservationRequest extends FormRequest
      */
     public function attributes()
     {
-        return [
-            'customer.pass_number' => 'Kunde - Ausweisnummer',
-            'customer.phone' => 'Kunde - Telefon',
-            'customer.driving_license_no' => 'Kunde - Führerschein Nr.',
-            'driver.pass_number' => 'Fahrer - Ausweisnummer',
-            'driver.phone' => 'Fahrer - Telefon',
-            'driver.driving_license_no' => 'Fahrer - Führerschein Nr.',
-            'data.reservation_deposit_recieved' => 'Anzahlung eingegangen',
-            'data.reservation_deposit_value' => 'Anzahlung',
-        ];
+        return [];
     }
 }
