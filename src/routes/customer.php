@@ -9,5 +9,9 @@ Route::patch('/customer/{customer}', [CustomerController::class, 'update'])->nam
 Route::delete('/customer/{customer}', [CustomerController::class, 'destroy'])->name('customer.delete'); // delete existing Customer
 
 // get Customer Selector List
-Route::get('/selector/customer', [CustomerController::class, 'getSelector'])->name('customer.selector')
+Route::get('/selector/customer', [CustomerController::class, 'getSelector'])->name('customer.selector');
+
+// get Customer Selector List
+Route::post('/api/customer', [CustomerController::class, 'apiCustomerStore'])->name('customer.api.store');
+Route::patch('/api/customer/{customer}', [CustomerController::class, 'apiCustomerUpdate'])->name('customer.api.update');
 ?>
