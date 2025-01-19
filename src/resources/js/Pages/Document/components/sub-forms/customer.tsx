@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
 
-import { getCustomerById, getCustomerSelectors } from "@/data/customer";
+import {
+    addCustomerFromDocument,
+    changeCustomerFromDocument,
+    emptyCustomer,
+    getCustomerById,
+    getCustomerSelectors,
+} from "@/data/customer";
 import { PickerReturn } from "@/types";
 
 import { InputTP24 } from "@/Components/ui/input-tp24";
@@ -16,11 +22,13 @@ import { documentCustomerForm } from "@/lib/document-form";
 import { SelectorCombobox } from "@/Components/selector-combobox";
 import { Combobox } from "@/Components/combobox";
 import { CustomerError, CustomerField } from "@/types/customer";
+import { Button } from "@/Components/ui/button";
 
 interface CustomerFormProps {
     customerErrors?: CustomerError;
+    dataChanged: boolean;
+    setDataChanged: (value: boolean) => void;
     type: customerType;
-    documentType: documentType;
     customer: documentCustomerForm;
     clearSubformError: (key: string, subform: string) => void;
     handleChangeInSubForm: (
@@ -31,9 +39,10 @@ interface CustomerFormProps {
 
 export const CustomerForm = ({
     type,
-    documentType,
     customerErrors,
     customer,
+    dataChanged,
+    setDataChanged,
     handleChangeInSubForm,
     clearSubformError,
 }: CustomerFormProps) => {
@@ -53,6 +62,9 @@ export const CustomerForm = ({
             ...data,
             [key]: value,
         }));
+        if (key === "id") {
+            setDataChanged(false);
+        }
         if (key !== "id")
             handleChangeInSubForm(type, { ...data, [key]: value });
     };
@@ -65,6 +77,11 @@ export const CustomerForm = ({
     ) => {
         const key = e.currentTarget.id;
         const value = e.currentTarget.value;
+        // Check if the value has changed
+        // ignore TS error
+        // @ts-ignore
+        if (key !== "id" && value !== customer[key]) setDataChanged(true);
+
         setData((data) => ({
             ...data,
             [key]: value,
@@ -74,26 +91,22 @@ export const CustomerForm = ({
 
     const handleSubmit = () => {
         if (data.id <= 0) {
-            post("/customer", {
-                only: ["customers", "errors"],
-                onSuccess: () => {
-                    toast.success("Kunde erfolgreich angelegt");
-                    close();
-                },
-                onError: () => {
+            addCustomerFromDocument(data).then((response) => {
+                if (response.errors) {
                     toast.error("Fehler beim anlegen des Kunden");
-                },
+                } else {
+                    toast.success("Kunde wurde erfolgreich angelegt");
+                    setDataChanged(false);
+                }
             });
         } else {
-            patch(`/customer/${data.id}`, {
-                only: ["customers", "errors"],
-                onSuccess: () => {
-                    toast.success("Kunde wurde erfolgreich geändert");
-                    close();
-                },
-                onError: () => {
-                    toast.error("Fehler beim ändern des Kunden");
-                },
+            changeCustomerFromDocument(data.id, data).then((response) => {
+                if (response.errors) {
+                    toast.error("Fehler beim anlegen des Kunden");
+                } else {
+                    toast.success("Kunde wurde erfolgreich angelegt");
+                    setDataChanged(false);
+                }
             });
         }
     };
@@ -110,6 +123,10 @@ export const CustomerForm = ({
                     setData({ ...customer });
                     handleChangeInSubForm(type, { ...customer });
                 });
+            }
+            if (data.id <= 0) {
+                setData({ ...emptyCustomer });
+                handleChangeInSubForm(type, { ...emptyCustomer });
             }
         };
         getCurrentCustomer();
@@ -129,17 +146,34 @@ export const CustomerForm = ({
     }, []);
 
     return (
-        <div className="p-4">
-            <div className="flex flex-col md:max-w-[calc(50%-1.25rem)] mb-10">
-                <SelectorCombobox
-                    id="id"
-                    value={data.id}
-                    items={customerList}
-                    onValueChange={handlePickerChange}
-                    label={`${
-                        type === "customer" ? "Kunden" : "Fahrer"
-                    } auswählen`}
-                />
+        <div className="p-4 flex flex-col gap-10">
+            <div className="flex gap-10 flex-col md:flex-row">
+                <div className="flex flex-col gap-6 w-full">
+                    <SelectorCombobox
+                        className="w-full"
+                        id="id"
+                        value={data.id}
+                        items={customerList}
+                        onValueChange={handlePickerChange}
+                        label={`${
+                            type === "customer" ? "Kunden" : "Fahrer"
+                        } auswählen`}
+                    />
+                </div>
+                <div className="flex flex-col gap-6 w-full">
+                    {dataChanged && (
+                        <Button
+                            variant="success"
+                            size="sm"
+                            onClick={handleSubmit}
+                            className="max-w-52"
+                        >
+                            {data.id <= 0
+                                ? "Kunden anlegen"
+                                : "Kunden Datensatz ändern"}
+                        </Button>
+                    )}
+                </div>
             </div>
             <div className="flex gap-10 flex-col md:flex-row">
                 <div className="flex flex-col gap-6 w-full">
