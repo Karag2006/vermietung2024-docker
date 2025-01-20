@@ -64,6 +64,8 @@ export const DocumentForm = ({
     currentID,
     close,
 }: DocumentFormProps) => {
+    const [customerChange, setCustomerChange] = useState(false);
+    const [driverChange, setDriverChange] = useState(false);
     const germanDocumentType = getDocumentTypeTranslation(documentType);
 
     const [collisionDialog, setCollisionDialog] = useState(false);
@@ -354,7 +356,8 @@ export const DocumentForm = ({
                     <TabsContent value="customer">
                         <CustomerForm
                             type={customerType.CUSTOMER}
-                            documentType={documentType}
+                            dataChanged={customerChange}
+                            setDataChanged={setCustomerChange}
                             customer={data.customer}
                             customerErrors={errorsBySubform?.customer}
                             clearSubformError={clearErrorInSubform}
@@ -364,7 +367,8 @@ export const DocumentForm = ({
                     <TabsContent value="driver">
                         <CustomerForm
                             type={customerType.DRIVER}
-                            documentType={documentType}
+                            dataChanged={driverChange}
+                            setDataChanged={setDriverChange}
                             clearSubformError={clearErrorInSubform}
                             customer={data.driver}
                             customerErrors={errorsBySubform?.driver}
