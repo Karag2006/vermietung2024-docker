@@ -31,8 +31,10 @@ class Trailer extends Model
         'comment'
     ];
 
-
-
+    public function price()
+    {
+        return $this->belongsTo(Price::class);
+    }
 
     public function getSelectorAttribute(){
         return $this->plateNumber . ' - ' . $this->title;

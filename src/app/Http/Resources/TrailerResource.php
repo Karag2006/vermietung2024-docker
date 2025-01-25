@@ -25,6 +25,7 @@ class TrailerResource extends JsonResource
             'usableWeight' => $this->usableWeight ?? '',
             'loading_size' => $this->loading_size ?? [],
             'comment' => $this->comment ?? '',
+            'price' => $this->price,
         ];
 
         return $trailer;

@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     require __DIR__.'/contract.php';
     require __DIR__.'/document.php';
     require __DIR__.'/analysis.php';
+    require __DIR__.'/price.php';
 
 });
 

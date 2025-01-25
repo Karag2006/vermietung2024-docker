@@ -9,6 +9,7 @@ use App\Models\Trailer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class TrailerController extends Controller
@@ -18,7 +19,10 @@ class TrailerController extends Controller
      */
     public function index(Request $request)
     {
-        $trailers = Trailer::select('id', 'title', 'plateNumber', 'totalWeight', 'usableWeight', 'loading_size', 'tuev', 'inspection_at')->orderBy('plateNumber')->get();
+        $trailers = Trailer::select('id', 'title', 'plateNumber', 'totalWeight', 'usableWeight', 'loading_size', 'tuev', 'inspection_at', 'price_id')
+            ->with('price')
+            ->orderBy('plateNumber')
+            ->get();
 
         // 05.11.2024 : Feature Inspection List - Add OpenEdit Header
         $headerValue = intval($request->header('openEdit'));
@@ -38,7 +42,7 @@ class TrailerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTrailerRequest $request)
+    public function store(StoreTrailerRequest $request): void
     {
         $trailer = Trailer::create($request->all());
     }
@@ -46,7 +50,7 @@ class TrailerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Trailer $trailer)
+    public function show(Trailer $trailer): JsonResponse
     {
         $result = new TrailerResource($trailer);
         return response()->json($result, Response::HTTP_OK);

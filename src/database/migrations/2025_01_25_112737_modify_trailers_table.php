@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 03.11.2024 Feature: Add Archive functionality
-        Schema::table('documents', function (Blueprint $table) {
-            $table->boolean('is_archived')->default(false)->after('id');
+        // Add Reference to Prices Table
+        Schema::table('trailers', function (Blueprint $table) {
+            $table->foreignId('price_id')->nullable()->constrained()->onDelete('set null');
         });
     }
 
@@ -22,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('documents', function (Blueprint $table) {
-            $table->dropColumn('is_archived');
+        Schema::table('trailers', function (Blueprint $table) {
+            $table->dropForeign(['price_id']);
+            $table->dropColumn('price_id');
         });
     }
 };
