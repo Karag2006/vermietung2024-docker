@@ -1,5 +1,8 @@
-export const floatToString = (floatValue: number) => {
-    if (floatValue) return floatValue.toFixed(2).replace(".", ",");
+export const floatToString = (floatValue: number, precision?: number) => {
+    if (floatValue)
+        return floatValue
+            .toFixed(Number.isInteger(precision) ? precision : 2)
+            .replace(".", ",");
     return "";
 };
 

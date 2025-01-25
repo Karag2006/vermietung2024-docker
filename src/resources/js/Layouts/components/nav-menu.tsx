@@ -55,6 +55,13 @@ export const NavMenu = ({ className }: NavMenuProps) => {
                         <List className="h-6 w-6" />
                         <span className="inline-block">Monatsübersicht</span>
                     </NavLink>
+                    <NavLink
+                        href={route("price.index")}
+                        active={route().current("price.index")}
+                    >
+                        <List className="h-6 w-6" />
+                        <span className="inline-block">Preisliste</span>
+                    </NavLink>
                     {navItems?.map((item: NavItem) => {
                         // 04.11.2024 Feature: Month List
                         // Removed Dashboard from navItems and added it above as a static link
