@@ -25,6 +25,7 @@ const PriceIndex = ({ auth, prices, trailerPrices }: PriceProps) => {
     const [priceModalOpen, setPriceModalOpen] = useState(false);
     const [trailerModalOpen, setTrailerModalOpen] = useState(false);
     const [currentID, setCurrentID] = useState(0);
+    const [currentTrailerID, setCurrentTrailerID] = useState(0);
     const [deleteName, setDeleteName] = useState("");
     const Form = useForm({
         id: currentID,
@@ -46,6 +47,11 @@ const PriceIndex = ({ auth, prices, trailerPrices }: PriceProps) => {
         setPriceModalOpen(true);
     };
 
+    const editTrailerPricelistModal = (trailerId: number) => {
+        setCurrentTrailerID(trailerId);
+        setTrailerModalOpen(true);
+    };
+
     const editPricelistModal = (id: number) => {
         setCurrentID(id);
         setPriceModalOpen(true);
@@ -56,6 +62,11 @@ const PriceIndex = ({ auth, prices, trailerPrices }: PriceProps) => {
         getPricelistById(id).then((priceList) => {
             setDeleteName(priceList.name);
         });
+        setConfirmModal(true);
+    };
+
+    const removePricelistFromTrailerModal = (trailerId: number) => {
+        setCurrentTrailerID(trailerId);
         setConfirmModal(true);
     };
 
