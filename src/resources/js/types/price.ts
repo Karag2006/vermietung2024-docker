@@ -21,6 +21,13 @@ export const trailerPriceSchema = z.object({
     price: priceSchema.optional().nullable(),
 });
 
+export const priceSelectorSchema = z.object({
+    id: z.number(),
+    selector: z.string(),
+});
+
 export type Price = z.infer<typeof priceSchema>;
+
+export type PriceSelector = z.infer<typeof priceSelectorSchema>;
 
 export type TrailerPrice = z.infer<typeof trailerPriceSchema>;
