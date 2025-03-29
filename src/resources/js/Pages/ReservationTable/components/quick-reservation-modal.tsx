@@ -124,15 +124,16 @@ export const QuickReservationModal = ({
     };
 
     const handleCustomerPickerChange = (result: PickerReturn) => {
-        const key = result.id;
         const value = result.value;
-        setData((data) => ({
-            ...data,
-            customer: {
-                ...data.customer,
-                [key]: value,
-            },
-        }));
+        if (typeof value === "number") {
+            setData((data) => ({
+                ...data,
+                customer: {
+                    ...data.customer,
+                    ["id"]: value,
+                },
+            }));
+        }
     };
 
     const handleTrailerPickerChange = (result: PickerReturn) => {
@@ -558,7 +559,7 @@ export const QuickReservationModal = ({
                 <span>oder: </span>
                 <div className="md:w-[calc(50%-1.25rem)]">
                     <SelectorCombobox
-                        id="id"
+                        id="customer_id"
                         value={data.customer.id}
                         items={customerList}
                         onValueChange={handleCustomerPickerChange}
