@@ -69,7 +69,8 @@ class ContractController extends Controller
         // 27.10.2024 Fix/DatesAndTimes : This might be the place where timezone issues are coming from.
         if(!$output['collect_at'])
         {
-            $collectDateTime = Carbon::createFromFormat($output['collect_date'] . ' ' . $output['collect_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
+            $collectDateTime = Carbon::createFromFormat($output['collect_date'] . ' ' . $output['collect_time'], config('custom.date_format'). ' ' . config('custom.time_format'));
+                
             $output['collect_at'] = $collectDateTime;
         }
         else {
@@ -77,7 +78,8 @@ class ContractController extends Controller
         }
         if(!$output['return_at'])
         {
-            $returnDateTime = Carbon::createFromFormat($output['return_date'] . ' ' . $output['return_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
+            $returnDateTime = Carbon::createFromFormat($output['return_date'] . ' ' . $output['return_time'], config('custom.date_format'). ' ' . config('custom.time_format'));
+                
             $output['return_at'] = $returnDateTime;
         }
         else {

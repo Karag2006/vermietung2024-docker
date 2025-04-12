@@ -2,7 +2,6 @@ import { getDocumentTypeTranslation } from "@/lib/utils";
 import { Document, DocumentFunctions } from "@/types/document";
 import { DocumentTooltipInfoItem } from "./document-tooltip-info-item";
 import { DocumentTooltipActions } from "./document-tooltip-actions";
-import { format } from "date-fns";
 
 interface DocumentTooltipProps {
     document: Document;
@@ -21,18 +20,10 @@ export const DocumentTooltip = ({
             ? document.reservation_number
             : document.contract_number;
 
-    const collectDate = document.collectTimestamp
-        ? format(document.collectTimestamp, "dd.MM.yyyy")
-        : "";
-    const collectTime = document.collectTimestamp
-        ? format(document.collectTimestamp, "HH:mm")
-        : "";
-    const returnDate = document.returnTimestamp
-        ? format(document.returnTimestamp, "dd.MM.yyyy")
-        : "";
-    const returnTime = document.returnTimestamp
-        ? format(document.returnTimestamp, "HH:mm")
-        : "";
+    const collectDate = document.collect_date ? document.collect_date : "";
+    const collectTime = document.collect_time ? document.collect_time : "";
+    const returnDate = document.return_date ? document.return_date : "";
+    const returnTime = document.return_time ? document.return_time : "";
 
     return (
         <div className="p-2 border border-black">
