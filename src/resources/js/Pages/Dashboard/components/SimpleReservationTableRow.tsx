@@ -124,13 +124,13 @@ export const SimpleReservationTableRow = ({
                 <TableCell>{reservation.vehicle_plateNumber}</TableCell>
                 <TableCell>{reservation.customer_name1}</TableCell>
                 <TableCell>
-                    {reservation.collect_at
-                        ? format(reservation.collect_at, "dd.MM.yyyy HH:mm")
+                    {reservation.collect_date && reservation.collect_time
+                        ? `${reservation.collect_date} ${reservation.collect_time}`
                         : null}
                 </TableCell>
                 <TableCell>
-                    {reservation.return_at
-                        ? format(reservation.return_at, "dd.MM.yyyy HH:mm")
+                    {reservation.return_date && reservation.return_time
+                        ? `${reservation.return_date} ${reservation.return_time}`
                         : null}
                 </TableCell>
                 <TableCell>
