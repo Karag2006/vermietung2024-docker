@@ -32,6 +32,10 @@ class MonthListDocumentResource extends JsonResource
             'vehicle_id' => $this->vehicle_id,
             'vehicle_title' => $this->vehicle_title,
             'vehicle_plateNumber' => $this->vehicle_plateNumber,
+            'collect_date' => $this->collect_date,
+            'return_date' => $this->return_date,
+            'collect_time' => $this->collect_time,
+            'return_time' => $this->return_time,
 
             'phone' => $this->customer_phone ?? '',
             'comment' => $this->comment ?? '',
